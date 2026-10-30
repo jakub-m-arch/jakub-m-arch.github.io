@@ -1,0 +1,77 @@
+{
+  "generated": "2026-10-30T07:12:50.962Z",
+  "repos": {
+    "jakub-m-arch/mossbook": {
+      "url": "https://github.com/jakub-m-arch/mossbook",
+      "description": "A private, offline journal for mood, events, fears, sleep and nightmares.",
+      "homepage": null,
+      "language": "Rust",
+      "stars": 0,
+      "forks": 0,
+      "license": "GPL-3.0",
+      "created": "2026-10-18T06:16:16Z",
+      "pushed": "2026-10-23T13:36:34Z",
+      "archived": false
+    },
+    "jakub-m-arch/drone-log-visualizer": {
+      "url": "https://github.com/jakub-m-arch/drone-log-visualizer",
+      "description": "A viewer for DJI drone flight logs: on a map, in 3D and on charts. Self-hosted, runs in a single Docker container.",
+      "homepage": null,
+      "language": "Rust",
+      "stars": 0,
+      "forks": 0,
+      "license": "MIT",
+      "created": "2026-10-05T18:44:31Z",
+      "pushed": "2026-10-06T09:08:55Z",
+      "archived": false
+    },
+    "jakub-m-arch/intervals-icu-mcp": {
+      "url": "https://github.com/jakub-m-arch/intervals-icu-mcp",
+      "description": "MCP server for Intervals.icu — let Claude and other AI assistants read and plan your training",
+      "homepage": null,
+      "language": "TypeScript",
+      "stars": 0,
+      "forks": 0,
+      "license": "MIT",
+      "created": "2026-09-25T06:28:08Z",
+      "pushed": "2026-10-26T11:10:37Z",
+      "archived": false
+    },
+    "jakub-m-arch/caishen-budget-tracker": {
+      "url": "https://github.com/jakub-m-arch/caishen-budget-tracker",
+      "description": "Obsidian budget tracker plugin",
+      "homepage": null,
+      "language": "TypeScript",
+      "stars": 0,
+      "forks": 0,
+      "license": "MIT",
+      "created": "2026-01-03T05:39:58Z",
+      "pushed": "2026-01-13T05:57:17Z",
+      "archived": false
+    },
+    "jakub-m-arch/shelfmark": {
+      "url": "https://github.com/jakub-m-arch/shelfmark",
+      "description": "A personal library for Obsidian. Every book is a plain Markdown note with its data in properties, and covers are saved in the vault, so the library syncs with the rest of your notes and works offline on desktop and mobile.",
+      "homepage": null,
+      "language": "TypeScript",
+      "stars": 0,
+      "forks": 0,
+      "license": "MIT",
+      "created": "2026-10-29T11:37:09Z",
+      "pushed": "2026-10-30T05:18:36Z",
+      "archived": false
+    },
+    "jakub-m-arch/voicemator": {
+      "url": "https://github.com/jakub-m-arch/voicemator",
+      "description": "On-device dictation for Android, one tap away in Quick Settings.  Pull down the notification shade, tap Dictate, speak, tap it again. The transcription is copied to your clipboard, ready to paste into any app. Or turn on the optional accessibility service: a small mic button then appears at the keyboard whenever you type; tap it, speak, tap again, ",
+      "homepage": null,
+      "language": "Kotlin",
+      "stars": 0,
+      "forks": 0,
+      "license": "Apache-2.0",
+      "created": "2026-10-29T11:50:35Z",
+      "pushed": "2026-10-30T07:10:03Z",
+      "archived": false
+    }
+  }
+}

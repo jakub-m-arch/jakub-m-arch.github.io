@@ -1,0 +1,109 @@
+{
+  "owner": "jakub-m-arch",
+  "projects": [
+    {
+      "repo": "jakub-m-arch/mossbook",
+      "kind": "Desktop app · Android in progress",
+      "accent": "#3f6e50",
+      "headline": "A journal that stays yours.",
+      "blurb": "A private, offline journal for mood, events, fears, sleep and nightmares. Built with particular care for people going through a hard time and for people who see a therapist.",
+      "features": [
+        "Mood, sleep, events and nightmares, written down in seconds",
+        "Encrypted on your device: no server, no account, no telemetry",
+        "A PDF report to share with your therapist, only if you choose to"
+      ],
+      "site": "https://jakub-m-arch.github.io/mossbook/en/",
+      "media": {
+        "frame": "phones",
+        "src": ["assets/shots/mossbook-timeline.jpg", "assets/shots/mossbook-entry.jpg"],
+        "dark": ["assets/shots/mossbook-timeline-dark.jpg", "assets/shots/mossbook-entry-dark.jpg"],
+        "alt": ["Mossbook timeline with mood, note and sleep entries", "Mossbook mood entry with emotions and a note"]
+      }
+    },
+    {
+      "repo": "jakub-m-arch/drone-log-visualizer",
+      "kind": "Self-hosted web app · Docker",
+      "accent": "#d9532c",
+      "headline": "Replay every DJI flight in 3D.",
+      "blurb": "Drop the FlightRecord folder from your phone or controller onto the page and see every flight on a map, replayed over real terrain and buildings.",
+      "features": [
+        "2D map and 3D replay, track colored by height, speed or battery",
+        "Synchronized charts for height, speed, battery, GPS and signal",
+        "Export to CSV, GPX and KML. Your logs never leave your computer"
+      ],
+      "install": "docker compose up",
+      "media": {
+        "frame": "browser",
+        "label": "localhost:8080",
+        "src": "assets/shots/drone-3d.jpg",
+        "alt": "3D replay of a drone flight over Kazimierz Dolny with live telemetry"
+      }
+    },
+    {
+      "repo": "jakub-m-arch/intervals-icu-mcp",
+      "title": "Intervals.icu MCP",
+      "kind": "MCP server for Claude and other assistants",
+      "accent": "#2f62d8",
+      "headline": "Talk to your training log.",
+      "blurb": "Connects Claude and other MCP-compatible assistants to Intervals.icu, so they can read your activities, fitness and wellness, and help you plan what comes next.",
+      "features": [
+        "47 tools across activities, wellness, calendar, workouts and gear",
+        "Ready-made prompts: weekly review, recovery check, plan next week",
+        "Safe by default: it can create and edit, but never delete unless you allow it"
+      ],
+      "install": "npx -y @jakub-m-arch/intervals-icu-mcp",
+      "media": { "illustration": "chat" }
+    },
+    {
+      "repo": "jakub-m-arch/shelfmark",
+      "kind": "Obsidian plugin",
+      "accent": "#7655e8",
+      "headline": "Your bookshelf, as plain Markdown.",
+      "blurb": "A personal library inside Obsidian. Every book is a note with its data in properties and its cover in the vault, so the library syncs with your notes and works offline on desktop and mobile.",
+      "features": [
+        "Add books by title, author or ISBN, with covers downloaded automatically",
+        "Reading queue, yearly goal, loans, wishlist and reading stats",
+        "Optional suggestions on what to read next, powered by Claude Code"
+      ],
+      "media": {
+        "frame": "browser",
+        "label": "Obsidian · Library",
+        "src": "assets/shots/shelfmark-library.jpg",
+        "alt": "Shelfmark library view with the reading goal, current book, reading queue and suggestions"
+      }
+    },
+    {
+      "repo": "jakub-m-arch/voicemator",
+      "kind": "Android app",
+      "accent": "#0d8a86",
+      "headline": "Dictate anywhere. Nothing leaves the phone.",
+      "blurb": "On-device speech-to-text one tap away in Quick Settings. Speak, tap again, and the text is on your clipboard or typed straight into the field you're editing.",
+      "features": [
+        "Quick Settings tile, home screen widget or a mic button at the keyboard",
+        "25 European languages with NVIDIA Parakeet, fully offline",
+        "Custom dictionary, per-app profiles, history and stats"
+      ],
+      "site": "https://jakub-m-arch.github.io/voicemator/",
+      "media": { "illustration": "dictation" }
+    },
+    {
+      "repo": "jakub-m-arch/caishen-budget-tracker",
+      "title": "Caishen",
+      "kind": "Obsidian plugin",
+      "accent": "#c4841a",
+      "headline": "Your budget, next to your notes.",
+      "blurb": "A budget tracker that lives in your Obsidian vault: expenses, income, recurring payments and savings goals, with a dashboard that shows where the money goes.",
+      "features": [
+        "Income, expenses and balance for the month at a glance",
+        "Monthly budgets per category, recurring payments and savings goals",
+        "Analytics and trends over the last months"
+      ],
+      "media": {
+        "frame": "browser",
+        "label": "Obsidian · Budget Dashboard",
+        "src": "assets/shots/caishen-dashboard.jpg",
+        "alt": "Caishen budget dashboard with income, expenses, balance and monthly budgets"
+      }
+    }
+  ]
+}
