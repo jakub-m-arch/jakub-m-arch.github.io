@@ -27,6 +27,7 @@ const ILLUSTRATIONS = {
       <div class="calls"><span class="call write">create_events · Sat, Easy run 45m Z2</span></div>
     </div>`,
   dictation: () => `
+    <div class="dictation">
     <div class="phone" role="img" aria-label="Illustration: dictating from the Quick Settings tile">
       <div class="screen">
         <div class="qs">
@@ -42,6 +43,7 @@ const ILLUSTRATIONS = {
       <h3>ON-DEVICE MODEL</h3>
       <p>Parakeet, 25 European languages. Speech is transcribed on the phone and never uploaded.</p>
       <div class="lang-row"><span>EN</span><span>PL</span><span>DE</span><span>FR</span><span>ES</span><span>IT</span><span>NL</span><span>+18</span></div>
+    </div>
     </div>`,
 };
 
@@ -86,48 +88,68 @@ function picture(src, dark, alt) {
   return pic;
 }
 
-function renderMedia(media) {
-  if (!media) return null;
+// Fills a full-width band: screenshots as photos, phones and illustrations placed on the accent color.
+function renderBand(media, href) {
+  const band = el("a", { className: "band", href, tabIndex: -1 });
+  band.setAttribute("aria-hidden", "true");
+  if (!media) return band;
+
   if (media.illustration) {
-    const frag = document.createElement("template");
-    frag.innerHTML = ILLUSTRATIONS[media.illustration]?.() ?? "";
-    return frag.content;
-  }
-  if (media.frame === "phones") {
+    const tpl = document.createElement("template");
+    tpl.innerHTML = ILLUSTRATIONS[media.illustration]?.() ?? "";
+    band.append(tpl.content);
+  } else if (media.frame === "phones") {
     const wrap = el("div", { className: "phones" });
     media.src.forEach((src, i) => {
       const phone = el("div", { className: "phone" });
       phone.append(picture(src, media.dark?.[i], media.alt?.[i]));
       wrap.append(phone);
     });
-    return wrap;
+    band.append(wrap);
+  } else if (media.frame === "browser") {
+    band.classList.add("window");
+    const win = el("div", { className: "browser" }, `<div class="bar"><i></i><i></i><i></i><span></span></div>`);
+    $(".bar span", win).textContent = media.label ?? "";
+    win.append(picture(media.src, media.dark, media.alt));
+    band.append(win);
+  } else {
+    band.classList.add("photo");
+    band.append(picture(media.src, media.dark, media.alt));
   }
-  const win = el("div", { className: "browser" }, `<div class="bar"><i></i><i></i><i></i><span></span></div>`);
-  $(".bar span", win).textContent = media.label ?? "";
-  win.append(picture(media.src, media.dark, media.alt));
-  return win;
+  return band;
 }
 
-function renderProject(project, stats, i) {
+function renderSpread(project, stats, i, total) {
   const name = project.repo.split("/")[1];
   const title = project.title ?? titleFromRepo(name);
   const repoUrl = stats?.url ?? `https://github.com/${project.repo}`;
   const site = project.site ?? stats?.homepage ?? null;
+  const num = String(i + 1).padStart(2, "0");
 
-  const section = el("section", { className: "project", id: name });
-  if (project.accent) section.style.setProperty("--accent", project.accent);
+  const spread = el("article", { className: "spread", id: name });
+  if (project.accent) spread.style.setProperty("--accent", project.accent);
 
-  const copy = el("div", { className: "copy" });
-  const label = el("p", { className: "label" });
-  label.append(el("span", { className: "num", textContent: String(i + 1).padStart(2, "0") }), el("span", { textContent: project.kind ?? "" }));
-  copy.append(label, el("h2", { textContent: title }));
-  if (project.headline) copy.append(el("p", { className: "headline", textContent: project.headline }));
-  copy.append(el("p", { className: "blurb", textContent: project.blurb ?? stats?.description ?? "" }));
+  const running = el("div", { className: "running" });
+  running.append(
+    el("span", {}, `<span class="n">${num}</span> / ${String(total).padStart(2, "0")} · `),
+    el("span", { textContent: project.kind ?? "" })
+  );
+  running.firstChild.append(document.createTextNode(title));
+  spread.append(running);
 
+  const h2 = el("h2");
+  h2.append(el("a", { href: site ?? repoUrl, textContent: title }));
+  spread.append(h2, renderBand(project.media, site ?? repoUrl));
+
+  const left = el("div");
+  if (project.headline) left.append(el("p", { className: "deck", textContent: project.headline }));
+  left.append(el("p", { className: "blurb", textContent: project.blurb ?? stats?.description ?? "" }));
+
+  const right = el("div");
   if (project.features?.length) {
     const ul = el("ul", { className: "features" });
     for (const f of project.features) ul.append(el("li", { textContent: f }));
-    copy.append(ul);
+    right.append(ul);
   }
 
   if (project.install) {
@@ -143,13 +165,13 @@ function renderProject(project, stats, i) {
       setTimeout(() => (btn.textContent = "Copy"), 1500);
     });
     box.append(el("code", { textContent: project.install }), btn);
-    copy.append(box);
+    right.append(box);
   }
 
   const actions = el("div", { className: "actions" });
   if (site) actions.append(el("a", { className: "btn primary", href: site }, `Visit the website ${ICONS.arrow}`));
   actions.append(el("a", { className: site ? "btn" : "btn primary", href: repoUrl }, `${ICONS.github} ${site ? "Source code" : "View on GitHub"}`));
-  copy.append(actions);
+  right.append(actions);
 
   const facts = el("ul", { className: "facts" });
   if (stats?.language) {
@@ -161,30 +183,46 @@ function renderProject(project, stats, i) {
   if (stats?.stars) facts.append(el("li", { textContent: `★ ${stats.stars}` }));
   if (stats?.pushed) facts.append(el("li", { textContent: updatedAgo(stats.pushed) }));
   if (stats?.archived) facts.append(el("li", { textContent: "archived" }));
-  copy.append(facts);
+  right.append(facts);
 
-  section.append(copy);
-
-  const visual = renderMedia(project.media);
-  if (visual) {
-    const stage = el("a", { className: "stage", href: site ?? repoUrl, tabIndex: -1 });
-    stage.setAttribute("aria-hidden", "true");
-    stage.append(visual);
-    section.append(stage);
-  }
-
-  return section;
+  const columns = el("div", { className: "columns" });
+  columns.append(left, right);
+  spread.append(columns);
+  return spread;
 }
 
-function renderIndex(projects) {
-  const nav = $(".index");
-  for (const p of projects) {
+function renderContents(projects) {
+  const ol = $(".contents ol");
+  projects.forEach((p, i) => {
     const name = p.repo.split("/")[1];
     const a = el("a", { href: `#${name}` });
     if (p.accent) a.style.setProperty("--accent", p.accent);
-    a.append(el("strong", { textContent: p.title ?? titleFromRepo(name) }), el("small", { textContent: p.kind?.split(" · ")[0] ?? "" }));
-    nav.append(a);
-  }
+    a.append(
+      el("span", { className: "n", textContent: String(i + 1).padStart(2, "0") }),
+      el("strong", { textContent: p.title ?? titleFromRepo(name) }),
+      el("small", { textContent: p.headline ?? p.kind ?? "" })
+    );
+    const li = el("li");
+    li.append(a);
+    ol.append(li);
+  });
+  const words = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve"];
+  $(".issue").textContent = `${words[projects.length] ?? projects.length} projects · ${new Date().getFullYear()}`;
+}
+
+// Bands settle into place the first time they scroll into view.
+function revealBands() {
+  const bands = document.querySelectorAll(".band");
+  if (!("IntersectionObserver" in window)) return bands.forEach((b) => b.classList.add("seen"));
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (e.isIntersecting) {
+        e.target.classList.add("seen");
+        io.unobserve(e.target);
+      }
+    }
+  }, { threshold: 0.15 });
+  bands.forEach((b) => io.observe(b));
 }
 
 async function main() {
@@ -192,9 +230,10 @@ async function main() {
   if (!config) return;
   const stats = statsFile?.repos ?? {};
 
-  renderIndex(config.projects);
-  const main = $(".projects");
-  config.projects.forEach((p, i) => main.append(renderProject(p, stats[p.repo], i)));
+  renderContents(config.projects);
+  const spreads = $(".spreads");
+  config.projects.forEach((p, i) => spreads.append(renderSpread(p, stats[p.repo], i, config.projects.length)));
+  revealBands();
 
   if (statsFile?.generated) $(".updated").textContent = `Repository data from GitHub, refreshed ${formatDate(statsFile.generated)}.`;
 }

@@ -27,7 +27,8 @@ without `blurb`, the repo description.
 
 `media` takes one of:
 
-- `{"frame": "browser", "src": "...", "label": "..."}`: a screenshot in a window frame,
+- `{"frame": "photo", "src": "..."}`: a full-width picture, best for maps and photos,
+- `{"frame": "browser", "src": "...", "label": "..."}`: an app screenshot in a window frame,
 - `{"frame": "phones", "src": ["a.jpg", "b.jpg"], "dark": [...]}`: phone screenshots,
 - `{"illustration": "chat"}`: a drawn illustration defined in `assets/app.js`.
 

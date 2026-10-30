@@ -33,8 +33,7 @@
       ],
       "install": "docker compose up",
       "media": {
-        "frame": "browser",
-        "label": "localhost:8080",
+        "frame": "photo",
         "src": "assets/shots/drone-3d.jpg",
         "alt": "3D replay of a drone flight over Kazimierz Dolny with live telemetry"
       }
