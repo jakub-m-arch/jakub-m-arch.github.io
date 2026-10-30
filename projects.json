@@ -1,16 +1,46 @@
 {
   "owner": "jakub-m-arch",
+  "magazine": {
+    "name": "At Home",
+    "tagline": "A magazine of small software",
+    "issue": 1,
+    "coverline": "Six small tools, built after hours.",
+    "cover": {
+      "background": "#1f3327",
+      "phones": ["assets/shots/mossbook-timeline-dark.jpg", "assets/shots/mossbook-entry.jpg"]
+    },
+    "letter": [
+      "Most of the software in my life wants something from me: an account, a subscription, a line to someone else's server. The things I build after hours go the other way.",
+      "This first issue collects six of them. A journal for difficult days that nobody else can read. A viewer for drone flight logs. A bridge between my training log and an AI coach. A bookshelf and a budget that live in my notes, and a dictation app that never sends a word anywhere.",
+      "All of them are open source and free. If one is useful to you, take it. If something breaks, tell me on GitHub."
+    ],
+    "signature": "Jakub"
+  },
   "projects": [
     {
       "repo": "jakub-m-arch/mossbook",
+      "section": "Wellbeing",
       "kind": "Desktop app · Android in progress",
       "accent": "#3f6e50",
       "headline": "A journal that stays yours.",
-      "blurb": "A private, offline journal for mood, events, fears, sleep and nightmares. Built with particular care for people going through a hard time and for people who see a therapist.",
+      "blurb": "A private, offline journal for mood, events, fears, sleep and nightmares, built with particular care for people going through a hard time and for people who see a therapist.",
+      "story": [
+        "Most journaling apps start by asking for an account. Mossbook has no server to make one on. Entries are encrypted on the device, the app never connects to the internet, and even updates are something you go and fetch yourself.",
+        "It knows six kinds of entries: mood on a scale of one to five with emotions, events, fears and triggers with their intensity before and after a coping strategy, sleep, nightmares with a rewritten version, and free notes. A quick entry takes at most two taps and can be finished later. Over time, the Patterns view shows mood, a mood calendar and overviews, written as plain observations rather than clinical conclusions.",
+        "For the hardest moments there is a plan you write yourself, with crisis numbers and grounding exercises available without unlocking. And when there is something to bring to a session, Mossbook makes a PDF report for a chosen period, optionally protected with a password."
+      ],
+      "pullquote": "Quick entry from the lock screen can add, but never read.",
+      "caption": "The timeline and a mood entry. Screenshots with made-up entries.",
+      "stats": [
+        { "value": "0", "label": "servers, accounts or trackers" },
+        { "value": "6", "label": "kinds of entries" },
+        { "value": "3", "label": "languages: Polish, English, Ukrainian" }
+      ],
+      "runsOn": "Linux, Windows, macOS. Android coming",
       "features": [
         "Mood, sleep, events and nightmares, written down in seconds",
-        "Encrypted on your device: no server, no account, no telemetry",
-        "A PDF report to share with your therapist, only if you choose to"
+        "Encrypted on your device, with encrypted backups",
+        "A PDF report for your therapist, only if you choose to"
       ],
       "site": "https://jakub-m-arch.github.io/mossbook/en/",
       "media": {
@@ -22,14 +52,28 @@
     },
     {
       "repo": "jakub-m-arch/drone-log-visualizer",
+      "section": "Aviation",
       "kind": "Self-hosted web app · Docker",
       "accent": "#d9532c",
       "headline": "Replay every DJI flight in 3D.",
-      "blurb": "Drop the FlightRecord folder from your phone or controller onto the page and see every flight on a map, replayed over real terrain and buildings.",
+      "blurb": "Drop the FlightRecord folder from your phone or controller onto the page and every flight appears on a map, replayed over real terrain and buildings.",
+      "story": [
+        "DJI drones keep a detailed log of every flight. Drone Log Visualizer turns that folder into something you can actually look at. Drop the whole FlightRecord folder onto the page: duplicates are skipped, errors are grouped by cause, and you get totals per aircraft.",
+        "Each flight replays as a ribbon at real height over terrain, 3D buildings and woods, colored by height, speed or battery. Charts for height, speed, battery, GPS satellites, gimbal pitch and signal move in sync with the map. Drag to zoom, click to jump, play back at up to fifty times the speed. In Poland it can even fetch the height of every tree and building from airborne laser scanning.",
+        "It reads every log format from v1 to v14, including encrypted logs from current DJI apps with your own free developer key. Everything runs in one Docker container and stays in a local database, with export to CSV, GPX and KML."
+      ],
+      "pullquote": "A ribbon at real height over terrain, buildings and woods.",
+      "caption": "A synthetic demo flight over Kazimierz Dolny, replayed in 3D. Map data © OpenStreetMap contributors.",
+      "stats": [
+        { "value": "14", "label": "log format versions, v1 to v14" },
+        { "value": "50×", "label": "fastest playback speed" },
+        { "value": "1", "label": "Docker container, no cloud" }
+      ],
+      "runsOn": "Any machine with Docker",
       "features": [
         "2D map and 3D replay, track colored by height, speed or battery",
         "Synchronized charts for height, speed, battery, GPS and signal",
-        "Export to CSV, GPX and KML. Your logs never leave your computer"
+        "Export to CSV, GPX and KML"
       ],
       "install": "docker compose up",
       "media": {
@@ -41,28 +85,56 @@
     {
       "repo": "jakub-m-arch/intervals-icu-mcp",
       "title": "Intervals.icu MCP",
-      "kind": "MCP server for Claude and other assistants",
+      "section": "Sport",
+      "kind": "MCP server",
       "accent": "#2f62d8",
       "headline": "Talk to your training log.",
-      "blurb": "Connects Claude and other MCP-compatible assistants to Intervals.icu, so they can read your activities, fitness and wellness, and help you plan what comes next.",
+      "blurb": "Connects Claude and other AI assistants to Intervals.icu, so they can read your activities, fitness and wellness, and help you plan what comes next.",
+      "story": [
+        "Intervals.icu knows everything about your training. This server lets an AI assistant know it too. Claude Desktop, Claude Code, Cursor, VS Code or any other MCP client can read your activities, fitness, wellness and calendar, and help plan the weeks ahead.",
+        "It has 47 hand-designed tools, grouped into toolsets you can switch on and off so the model's context isn't flooded, and all 149 Intervals.icu API operations are accounted for. The client is generated from the official OpenAPI spec, and pace comes out the way runners read it, in min/km or min/mi with GAP and zones.",
+        "It is careful by default. Tools for deleting aren't even registered unless you ask for them, planned workouts are checked after saving, and duplicate events are skipped. Ready-made prompts cover a weekly review, a recovery check and planning next week."
+      ],
+      "pullquote": "The assistant can create and edit, but cannot delete.",
+      "caption": "Illustration: a weekly review and a planned easy run, using the server's tools.",
+      "stats": [
+        { "value": "47", "label": "tools, in toolsets you switch on and off" },
+        { "value": "149", "label": "API operations accounted for" },
+        { "value": "5", "label": "ready-made coaching prompts" }
+      ],
+      "runsOn": "Claude Desktop, Claude Code, Cursor, VS Code",
       "features": [
-        "47 tools across activities, wellness, calendar, workouts and gear",
-        "Ready-made prompts: weekly review, recovery check, plan next week",
-        "Safe by default: it can create and edit, but never delete unless you allow it"
+        "Activities, wellness, calendar, workouts and gear",
+        "Weekly review, recovery check and plan-next-week prompts",
+        "Safe by default: no deleting unless you allow it"
       ],
       "install": "npx -y @jakub-m-arch/intervals-icu-mcp",
       "media": { "illustration": "chat" }
     },
     {
       "repo": "jakub-m-arch/shelfmark",
+      "section": "Books",
       "kind": "Obsidian plugin",
       "accent": "#7655e8",
       "headline": "Your bookshelf, as plain Markdown.",
-      "blurb": "A personal library inside Obsidian. Every book is a note with its data in properties and its cover in the vault, so the library syncs with your notes and works offline on desktop and mobile.",
+      "blurb": "A personal library inside Obsidian that syncs with your notes and works offline on desktop and mobile.",
+      "story": [
+        "Shelfmark turns an Obsidian vault into a personal library. Every book is a plain Markdown note with its data in properties, and covers are saved in the vault, so the library travels with the rest of your notes and keeps working without a connection.",
+        "Books come in by title, author or ISBN from Open Library, Google Books and, optionally, the National Library of Poland. The library shows covers or a list, with status tabs, filters and ready-made shelves: owned but unread, wishlist, favorites, on loan. There is a reading queue, a yearly goal, reading progress, loans in both directions with reminders, and a wishlist you can export as gift ideas.",
+        "If Claude Code is installed, Shelfmark can use it for book suggestions, a reading profile, a pick of what to read next from your own shelves, and a recap of earlier volumes before the next book in a series. All of it is optional."
+      ],
+      "pullquote": "Every book is a plain Markdown note.",
+      "caption": "The library view: a yearly goal, the current book, the reading queue and suggestions.",
+      "stats": [
+        { "value": "3", "label": "book sources, one of them optional" },
+        { "value": "1", "label": "Markdown note per book" },
+        { "value": "0", "label": "databases to look after" }
+      ],
+      "runsOn": "Obsidian, desktop and mobile",
       "features": [
-        "Add books by title, author or ISBN, with covers downloaded automatically",
-        "Reading queue, yearly goal, loans, wishlist and reading stats",
-        "Optional suggestions on what to read next, powered by Claude Code"
+        "Add books by title, author or ISBN, with covers",
+        "Reading queue, yearly goal, loans and a wishlist",
+        "Reading stats per year or for all time"
       ],
       "media": {
         "frame": "browser",
@@ -73,14 +145,28 @@
     },
     {
       "repo": "jakub-m-arch/voicemator",
+      "section": "Voice",
       "kind": "Android app",
       "accent": "#0d8a86",
       "headline": "Dictate anywhere. Nothing leaves the phone.",
-      "blurb": "On-device speech-to-text one tap away in Quick Settings. Speak, tap again, and the text is on your clipboard or typed straight into the field you're editing.",
+      "blurb": "On-device speech-to-text, one tap away in Quick Settings.",
+      "story": [
+        "Voicemator puts dictation in Android's Quick Settings. Pull down the shade, tap Dictate, speak, tap again, and the text is on the clipboard. Turn on the optional accessibility service and a small mic button appears at the keyboard instead, typing straight into the field you're editing.",
+        "Speech never leaves the phone. It runs Parakeet Ultra, a post-trained version of NVIDIA's Parakeet covering 25 European languages, entirely on the device after a one-time model download. Long dictations are transcribed in the background while you speak, so the text is ready the moment you stop.",
+        "Around that sit the details: a dictionary for names it gets wrong, app profiles with no full stop in messengers and full punctuation in email, a filter for hesitation sounds, and transcription of voice messages and audio files of any length."
+      ],
+      "pullquote": "Speech never leaves your phone.",
+      "caption": "Illustration: dictating from the Quick Settings tile.",
+      "stats": [
+        { "value": "25", "label": "European languages" },
+        { "value": "670", "label": "MB model, downloaded once" },
+        { "value": "0", "label": "bytes of speech uploaded" }
+      ],
+      "runsOn": "Android",
       "features": [
-        "Quick Settings tile, home screen widget or a mic button at the keyboard",
-        "25 European languages with NVIDIA Parakeet, fully offline",
-        "Custom dictionary, per-app profiles, history and stats"
+        "Quick Settings tile, widget or a mic button at the keyboard",
+        "Custom dictionary and per-app profiles",
+        "History and stats, kept on the phone"
       ],
       "site": "https://jakub-m-arch.github.io/voicemator/",
       "media": { "illustration": "dictation" }
@@ -88,14 +174,28 @@
     {
       "repo": "jakub-m-arch/caishen-budget-tracker",
       "title": "Caishen",
+      "section": "Money",
       "kind": "Obsidian plugin",
       "accent": "#c4841a",
       "headline": "Your budget, next to your notes.",
-      "blurb": "A budget tracker that lives in your Obsidian vault: expenses, income, recurring payments and savings goals, with a dashboard that shows where the money goes.",
+      "blurb": "A budget tracker that lives in your Obsidian vault, with a dashboard that shows where the money goes.",
+      "story": [
+        "Caishen, named after the Chinese god of wealth, is a budget tracker that lives inside your Obsidian vault, right next to the rest of your notes. There is no separate app and no account to sign up for.",
+        "A dashboard shows the month's income, expenses and balance at a glance. Monthly budgets per category show how much is left, recurring payments such as rent or subscriptions are entered once, and savings goals track progress toward a target.",
+        "Five tabs, Overview, Categories, Goals, Analytics and Transactions, cover the rest, with yearly overviews and trends over the last months. Categories, currency and language are all yours to set."
+      ],
+      "pullquote": "No separate app, no account to sign up for.",
+      "caption": "The budget dashboard: income, expenses, balance and monthly budgets.",
+      "stats": [
+        { "value": "5", "label": "dashboard tabs" },
+        { "value": "1", "label": "vault, alongside your notes" },
+        { "value": "0", "label": "accounts" }
+      ],
+      "runsOn": "Obsidian",
       "features": [
-        "Income, expenses and balance for the month at a glance",
-        "Monthly budgets per category, recurring payments and savings goals",
-        "Analytics and trends over the last months"
+        "Income, expenses and balance for the month",
+        "Budgets per category, recurring payments, savings goals",
+        "Analytics and trends over recent months"
       ],
       "media": {
         "frame": "browser",

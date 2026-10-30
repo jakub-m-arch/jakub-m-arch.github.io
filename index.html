@@ -3,42 +3,60 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Projects · jakub-m-arch</title>
+  <title>At Home · projects by jakub-m-arch</title>
   <meta name="description" content="Open-source, local-first tools for journaling, flying, training, reading, dictation and budgeting.">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%231b1a18'/><text x='16' y='23' font-family='Georgia,serif' font-size='20' fill='%23f3f0e8' text-anchor='middle'>j</text></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23c8402a'/><text x='16' y='24' font-family='Georgia,serif' font-size='22' font-style='italic' fill='%23fff' text-anchor='middle'>H</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap">
   <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
-  <header class="cover">
-    <div class="masthead">
-      <a href="https://github.com/jakub-m-arch">jakub-m-arch</a>
-      <span>Open source</span>
-      <span class="issue"></span>
-    </div>
+  <!-- cover -->
+  <header class="cover page">
+    <div class="cover-art" aria-hidden="true"></div>
+    <div class="cover-inner">
+      <div class="cover-top">
+        <span class="issue-line"></span>
+        <span>Free · Open source</span>
+      </div>
+      <h1 class="masthead"></h1>
+      <p class="tagline"></p>
 
-    <h1>Small software<br>that stays <em>at&nbsp;home.</em></h1>
+      <div class="cover-body">
+        <p class="coverline"></p>
+        <ul class="coverlines"></ul>
+      </div>
 
-    <div class="cover-foot">
-      <p class="lede">
-        Tools I build for my own life — a journal, a flight log, a training coach, a bookshelf,
-        a dictation app and a budget — published as open source. Local-first wherever it can be:
-        no accounts, no tracking, no subscriptions.
-      </p>
-      <nav class="contents" aria-label="Contents">
-        <h2>Contents</h2>
-        <ol></ol>
-      </nav>
+      <div class="cover-bottom">
+        <a class="byline" href="https://github.com/jakub-m-arch">by jakub-m-arch</a>
+        <div class="barcode" aria-hidden="true"><svg></svg><span></span></div>
+      </div>
     </div>
   </header>
 
+  <!-- editor's letter + contents -->
+  <section class="front page">
+    <div class="running"><span class="folio-l"></span><span>Inside</span></div>
+    <div class="front-grid">
+      <article class="letter">
+        <p class="kicker">From the editor</p>
+        <h2>Software that stays&nbsp;<em>at&nbsp;home</em></h2>
+        <div class="letter-body"></div>
+        <p class="signature"></p>
+      </article>
+      <nav class="contents" aria-label="Contents">
+        <p class="kicker">Contents</p>
+        <ol></ol>
+      </nav>
+    </div>
+  </section>
+
   <main class="spreads"></main>
 
-  <footer class="colophon">
-    <p class="end">— end —</p>
-    <p>More experiments and smaller things live in <a href="https://github.com/jakub-m-arch">all repositories on GitHub ↗</a></p>
+  <footer class="back page">
+    <p class="kicker">Back page</p>
+    <p class="back-line">More experiments and smaller things live in <a href="https://github.com/jakub-m-arch">every repository on GitHub&nbsp;↗</a></p>
     <p class="updated"></p>
   </footer>
 

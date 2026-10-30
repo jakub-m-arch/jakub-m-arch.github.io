@@ -88,7 +88,47 @@ function picture(src, dark, alt) {
   return pic;
 }
 
-// Fills a full-width band: screenshots as photos, phones and illustrations placed on the accent color.
+const SEASONS = ["Winter", "Winter", "Spring", "Spring", "Spring", "Summer", "Summer", "Summer", "Autumn", "Autumn", "Autumn", "Winter"];
+const pad = (n) => String(n).padStart(2, "0");
+// Cover is page 1, the letter and contents pages 2–3, then each project takes a two-page spread.
+const pageOf = (i) => 4 + i * 2;
+
+function issueLine(mag) {
+  const now = new Date();
+  return `No. ${pad(mag.issue ?? 1)} · ${SEASONS[now.getMonth()]} ${now.getFullYear()}`;
+}
+
+function copyButton(text) {
+  const btn = el("button", { type: "button", textContent: "Copy" });
+  btn.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(text);
+      btn.textContent = "Copied";
+    } catch {
+      btn.textContent = "Failed";
+    }
+    setTimeout(() => (btn.textContent = "Copy"), 1500);
+  });
+  return btn;
+}
+
+// Decorative barcode, stable for a given string.
+function drawBarcode(svg, seed) {
+  let h = 7;
+  let x = 0;
+  const bars = [];
+  while (x < 116) {
+    for (const ch of seed) h = (h * 31 + ch.charCodeAt(0)) % 9973;
+    h = (h * 17 + x) % 9973;
+    const w = 1 + (h % 3);
+    if (h % 5 !== 0) bars.push(`<rect x="${x}" y="0" width="${w}" height="${x < 4 || x > 110 ? 44 : 38}"/>`);
+    x += w + 1 + ((h >> 3) % 2);
+  }
+  svg.setAttribute("viewBox", "0 0 120 44");
+  svg.innerHTML = bars.join("");
+}
+
+// Fills a band: screenshots as photos or windows, phones and illustrations on the accent color.
 function renderBand(media, href) {
   const band = el("a", { className: "band", href, tabIndex: -1 });
   band.setAttribute("aria-hidden", "true");
@@ -119,95 +159,170 @@ function renderBand(media, href) {
   return band;
 }
 
-function renderSpread(project, stats, i, total) {
-  const name = project.repo.split("/")[1];
-  const title = project.title ?? titleFromRepo(name);
-  const repoUrl = stats?.url ?? `https://github.com/${project.repo}`;
-  const site = project.site ?? stats?.homepage ?? null;
-  const num = String(i + 1).padStart(2, "0");
-
-  const spread = el("article", { className: "spread", id: name });
-  if (project.accent) spread.style.setProperty("--accent", project.accent);
-
-  const running = el("div", { className: "running" });
-  running.append(
-    el("span", {}, `<span class="n">${num}</span> / ${String(total).padStart(2, "0")} · `),
-    el("span", { textContent: project.kind ?? "" })
-  );
-  running.firstChild.append(document.createTextNode(title));
-  spread.append(running);
-
-  const h2 = el("h2");
-  h2.append(el("a", { href: site ?? repoUrl, textContent: title }));
-  spread.append(h2, renderBand(project.media, site ?? repoUrl));
-
-  const left = el("div");
-  if (project.headline) left.append(el("p", { className: "deck", textContent: project.headline }));
-  left.append(el("p", { className: "blurb", textContent: project.blurb ?? stats?.description ?? "" }));
-
-  const right = el("div");
-  if (project.features?.length) {
-    const ul = el("ul", { className: "features" });
-    for (const f of project.features) ul.append(el("li", { textContent: f }));
-    right.append(ul);
+function renderCover(mag, projects) {
+  const words = mag.name.split(" ");
+  const last = words.pop();
+  $(".masthead").textContent = words.length ? words.join(" ") + " " : "";
+  $(".masthead").append(el("em", { textContent: last }));
+  $(".issue-line").textContent = issueLine(mag);
+  $(".tagline").textContent = mag.tagline ?? "";
+  $(".coverline").textContent = mag.coverline ?? "";
+  if (mag.cover?.background) $(".cover").style.setProperty("--cover-bg", mag.cover.background);
+  for (const src of mag.cover?.phones ?? []) {
+    const phone = el("div", { className: "phone" });
+    phone.append(picture(src));
+    $(".cover-art").append(phone);
   }
 
-  if (project.install) {
-    const box = el("div", { className: "install" });
-    const btn = el("button", { type: "button", textContent: "Copy" });
-    btn.addEventListener("click", async () => {
-      try {
-        await navigator.clipboard.writeText(project.install);
-        btn.textContent = "Copied";
-      } catch {
-        btn.textContent = "Failed";
-      }
-      setTimeout(() => (btn.textContent = "Copy"), 1500);
-    });
-    box.append(el("code", { textContent: project.install }), btn);
-    right.append(box);
-  }
+  const ul = $(".coverlines");
+  projects.forEach((p, i) => {
+    const name = p.repo.split("/")[1];
+    const a = el("a", { href: `#${name}` });
+    if (p.accent) a.style.setProperty("--accent", p.accent);
+    a.append(
+      el("span", { className: "pg", textContent: pad(pageOf(i)) }),
+      el("strong", { textContent: p.title ?? titleFromRepo(name) }),
+      el("small", { textContent: p.headline ?? "" })
+    );
+    const li = el("li");
+    li.append(a);
+    ul.append(li);
+  });
 
-  const actions = el("div", { className: "actions" });
-  if (site) actions.append(el("a", { className: "btn primary", href: site }, `Visit the website ${ICONS.arrow}`));
-  actions.append(el("a", { className: site ? "btn" : "btn primary", href: repoUrl }, `${ICONS.github} ${site ? "Source code" : "View on GitHub"}`));
-  right.append(actions);
-
-  const facts = el("ul", { className: "facts" });
-  if (stats?.language) {
-    const li = el("li", { className: "lang", textContent: stats.language });
-    if (LANG_COLORS[stats.language]) li.style.setProperty("--dot", LANG_COLORS[stats.language]);
-    facts.append(li);
-  }
-  if (stats?.license) facts.append(el("li", { textContent: stats.license }));
-  if (stats?.stars) facts.append(el("li", { textContent: `★ ${stats.stars}` }));
-  if (stats?.pushed) facts.append(el("li", { textContent: updatedAgo(stats.pushed) }));
-  if (stats?.archived) facts.append(el("li", { textContent: "archived" }));
-  right.append(facts);
-
-  const columns = el("div", { className: "columns" });
-  columns.append(left, right);
-  spread.append(columns);
-  return spread;
+  drawBarcode($(".barcode svg"), mag.name + issueLine(mag));
+  $(".barcode span").textContent = `${pad(mag.issue ?? 1)} ${new Date().getFullYear()}`;
 }
 
-function renderContents(projects) {
+function renderFront(mag, projects) {
+  $(".front .folio-l").innerHTML = `<b>02</b> · `;
+  $(".front .folio-l").append(`${mag.name} · ${issueLine(mag)}`);
+
+  const body = $(".letter-body");
+  for (const p of mag.letter ?? []) body.append(el("p", { textContent: p }));
+  $(".signature").textContent = mag.signature ?? "";
+
   const ol = $(".contents ol");
   projects.forEach((p, i) => {
     const name = p.repo.split("/")[1];
     const a = el("a", { href: `#${name}` });
     if (p.accent) a.style.setProperty("--accent", p.accent);
     a.append(
-      el("span", { className: "n", textContent: String(i + 1).padStart(2, "0") }),
+      el("span", { className: "pg", textContent: pad(pageOf(i)) }),
+      el("span", { className: "sec", textContent: p.section ?? p.kind ?? "" }),
       el("strong", { textContent: p.title ?? titleFromRepo(name) }),
-      el("small", { textContent: p.headline ?? p.kind ?? "" })
+      el("small", { textContent: p.headline ?? "" })
     );
     const li = el("li");
     li.append(a);
     ol.append(li);
   });
-  const words = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve"];
-  $(".issue").textContent = `${words[projects.length] ?? projects.length} projects · ${new Date().getFullYear()}`;
+}
+
+function renderSpread(project, stats, i, mag) {
+  const name = project.repo.split("/")[1];
+  const title = project.title ?? titleFromRepo(name);
+  const repoUrl = stats?.url ?? `https://github.com/${project.repo}`;
+  const site = project.site ?? stats?.homepage ?? null;
+  const layout = i % 2 === 0 ? "feature" : "split";
+
+  const spread = el("article", { className: `spread page ${layout}`, id: name });
+  if (project.accent) spread.style.setProperty("--accent", project.accent);
+
+  // running head and folio
+  const running = el("div", { className: "running" });
+  running.append(el("span", {}, `<b></b>`), el("span", { textContent: project.kind ?? "" }));
+  $("b", running).textContent = project.section ?? "";
+  running.firstChild.append(` · ${title}`);
+
+  const folio = el("div", { className: "folio" });
+  folio.append(el("span", {}, `<b>${pad(pageOf(i))}</b> `), el("span", {}, ` <b>${pad(pageOf(i) + 1)}</b>`));
+  folio.firstChild.append(`${mag.name} · ${issueLine(mag)}`);
+  folio.lastChild.prepend(`${project.section ?? title} ·`);
+
+  // headline block
+  const head = el("header", { className: "head" });
+  head.append(el("p", { className: "kicker", textContent: project.section ?? "" }));
+  const h2 = el("h2");
+  h2.append(el("a", { href: site ?? repoUrl, textContent: title }));
+  head.append(h2);
+  if (project.headline) head.append(el("p", { className: "deck", textContent: project.headline }));
+
+  // picture with caption
+  const figure = el("figure");
+  figure.append(renderBand(project.media, site ?? repoUrl));
+  if (project.caption) {
+    const cap = el("figcaption", {}, `<b>Fig. ${i + 1}</b>`);
+    cap.append(project.caption);
+    figure.append(cap);
+  }
+
+  // article body with the pull quote after the first paragraph
+  const body = el("div", { className: "body" });
+  (project.story ?? [stats?.description ?? ""]).forEach((text, n) => {
+    body.append(el("p", { textContent: text }));
+    if (n === 0 && project.pullquote) body.append(el("blockquote", { className: "pullquote", textContent: project.pullquote }));
+  });
+
+  const standfirst = el("p", { className: "standfirst", textContent: project.blurb ?? "" });
+
+  const statList = el("ul", { className: "stats" });
+  for (const s of project.stats ?? []) {
+    const li = el("li");
+    li.append(el("b", { textContent: s.value }), el("span", { textContent: s.label }));
+    statList.append(li);
+  }
+
+  // sidebar: at a glance, spec sheet, links
+  const glance = el("section", { className: "box" }, `<h3>At a glance</h3>`);
+  const gl = el("ul");
+  for (const f of project.features ?? []) gl.append(el("li", { textContent: f }));
+  glance.append(gl);
+
+  const spec = el("section", { className: "box" }, `<h3>Spec sheet</h3>`);
+  const dl = el("dl", { className: "spec" });
+  const row = (k, v, cls) => {
+    if (!v) return;
+    dl.append(el("dt", { textContent: k }));
+    const dd = el("dd", { textContent: v, className: cls ?? "" });
+    if (cls === "lang" && LANG_COLORS[v]) dd.style.setProperty("--dot", LANG_COLORS[v]);
+    dl.append(dd);
+  };
+  row("Runs on", project.runsOn);
+  row("Written in", stats?.language, "lang");
+  row("License", stats?.license);
+  row("Updated", stats?.pushed && updatedAgo(stats.pushed).replace("updated ", ""));
+  if (stats?.stars) row("Stars", `★ ${stats.stars}`);
+  if (stats?.archived) row("Status", "Archived");
+  spec.append(dl);
+  if (project.install) {
+    const box = el("div", { className: "install" });
+    box.append(el("code", { textContent: project.install }), copyButton(project.install));
+    spec.append(box);
+  }
+
+  const actions = el("div", { className: "actions" });
+  if (site) actions.append(el("a", { className: "btn primary", href: site }, `<span>Visit the website</span>${ICONS.arrow}`));
+  actions.append(el("a", { className: site ? "btn" : "btn primary", href: repoUrl }, `<span>${site ? "Source on GitHub" : "Read on GitHub"}</span>${ICONS.github}`));
+
+  const article = el("div", { className: "article" });
+  if (layout === "feature") {
+    const lede = el("div", { className: "lede" });
+    lede.append(standfirst, statList);
+    const sidebar = el("aside", { className: "sidebar" });
+    sidebar.append(glance, spec);
+    spec.append(actions);
+    article.append(lede, body, sidebar);
+    spread.append(running, head, figure, article, folio);
+  } else {
+    const side = el("aside", { className: "side" });
+    spec.append(actions);
+    side.append(glance, spec);
+    article.append(standfirst, body, statList, side);
+    const copy = el("div", { className: "copy" });
+    copy.append(running, head, article, folio);
+    spread.append(figure, copy);
+  }
+  return spread;
 }
 
 // Bands settle into place the first time they scroll into view.
@@ -229,10 +344,12 @@ async function main() {
   const [config, statsFile] = await Promise.all([loadJSON("projects.json"), loadJSON("data/stats.json")]);
   if (!config) return;
   const stats = statsFile?.repos ?? {};
+  const mag = { name: "At Home", ...config.magazine };
 
-  renderContents(config.projects);
+  renderCover(mag, config.projects);
+  renderFront(mag, config.projects);
   const spreads = $(".spreads");
-  config.projects.forEach((p, i) => spreads.append(renderSpread(p, stats[p.repo], i, config.projects.length)));
+  config.projects.forEach((p, i) => spreads.append(renderSpread(p, stats[p.repo], i, mag)));
   revealBands();
 
   if (statsFile?.generated) $(".updated").textContent = `Repository data from GitHub, refreshed ${formatDate(statsFile.generated)}.`;
